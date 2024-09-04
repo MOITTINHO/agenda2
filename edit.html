@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Appointment{% endblock %}
+
+{% block content %}
+    <h1>Edit Appointment</h1>
+    <form action="{{ url_for('edit', id=id) }}" method="POST" class="booking-form">
+        <label for="date">Choose a date:</label>
+        <input type="date" id="date" name="date" value="{{ appointment.date }}" required>
+        
+        <label for="time">Choose a time:</label>
+        <input type="time" id="time" name="time" value="{{ appointment.time }}" required>
+        
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" value="{{ appointment.name }}" required>
+        
+        <label for="phone">Your Phone:</label>
+        <input type="tel" id="phone" name="phone" value="{{ appointment.phone }}" required>
+        
+        <button type="submit">Save Changes</button>
+    </form>
+{% endblock %}

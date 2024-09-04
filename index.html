@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            border-bottom: #77aaff 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .main {
+            padding: 20px;
+            background: #fff;
+            margin: 20px auto;
+            width: 90%;
+        }
+        .sidebar {
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .event {
+            background: #e4e4e4;
+            margin: 10px 0;
+            padding: 10px;
+            border-left: #77aaff 5px solid;
+        }
+        .flash-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .flash-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .flash-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .navigation a {
+            text-decoration: none;
+            color: #333;
+            font-size: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+            margin: 0 5px;
+        }
+        .navigation a.active {
+            background-color: #77aaff;
+            color: #fff;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        form label {
+            margin-top: 10px;
+        }
+        form input {
+            margin-top: 5px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        form input[type="submit"] {
+            margin-top: 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        form input[type="submit"]:hover {
+            background-color: #555;
+        }
+        @media (min-width: 768px) {
+            .main {
+                width: 70%;
+            }
+            .sidebar {
+                width: 30%;
+                float: left;
+            }
+            .main {
+                float: right;
+            }
+        }
+    </style>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Agendamento</h1>
+        </div>
+    </header>
+    <div class="navigation">
+        <a href="#agendar" class="active">Agendar Evento</a>
+        <a href="#eventos">Eventos Agendados</a>
+    </div>
+    <div class="main" id="agendar">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h2>Agendar Novo Evento</h2>
+        <form action="/add_event" method="POST">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="date">Data:</label>
+            <input type="text" id="date" name="date" required>
+            <label for="time">Horário:</label>
+            <input type="time" id="time" name="time" required>
+            <label for="phone">Telefone:</label>
+            <input type="tel" id="phone" name="phone" required>
+            <input type="submit" value="Agendar">
+        </form>
+    </div>
+    <div class="main" id="eventos" style="display: none;">
+        <h2>Eventos Agendados</h2>
+        <div>
+            {% for event in events %}
+                <div class="event">
+                    <h3>{{ event.name }}</h3>
+                    <p>Data: {{ event.date }}</p>
+                    <p>Horário: {{ event.time }}</p>
+                    <p>Telefone: {{ event.phone }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#date", {
+            dateFormat: "d/m/Y",  // Formato dd/mm/aaaa
+            locale: "pt"          // Configura o locale para português
+        });
+
+        document.querySelectorAll('.navigation a').forEach((link) => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                document.querySelectorAll('.navigation a').forEach((link) => link.classList.remove('active'));
+                document.querySelectorAll('.main').forEach((section) => section.style.display = 'none');
+                document.querySelector(this.getAttribute('href')).style.display = 'block';
+                this.classList.add('active');
+            });
+        });
+
+        // Mostrar a seção de agendamento por padrão
+        document.querySelector('#agendar').style.display = 'block';
+    </script>
+</body>
+</html>

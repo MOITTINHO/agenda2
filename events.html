@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos Agendados</title>
+    <style>
+        /* Seu CSS aqui */
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Eventos Agendados</h1>
+        </div>
+    </header>
+    <div class="main">
+        <h2>Eventos Agendados</h2>
+        <div>
+            {% for event in events %}
+                <div class="event">
+                    <h3>{{ event.name }}</h3>
+                    <p>Data: {{ event.date }}</p>
+                    <p>Horário: {{ event.time }}</p>
+                    <p>Telefone: {{ event.phone }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
